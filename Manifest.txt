@@ -1,0 +1,7 @@
+History.txt
+Manifest.txt
+README.txt
+Rakefile
+bin/deebee
+lib/deebee.rb
+test/test_deebee.rb
