@@ -16,4 +16,10 @@ class TestDeebee < Test::Unit::TestCase
     stmt = db.prepare('PRAGMA encoding')
     assert_instance_of(SQLite3::DeeBee::Statement, stmt);
   end
+
+  def test_encoding
+    enc = Encoding.find('UTF-8')
+    db = SQLite3::DeeBee.open(File.join(Dir.tmpdir, 'foo.db'))
+    assert_equal enc, db.encoding
+  end
 end
