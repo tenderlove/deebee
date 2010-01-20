@@ -24,10 +24,14 @@ static VALUE prepare(VALUE self, VALUE sql)
   sqlite3_stmt *stmt;
 
   Data_Get_Struct(self, sqlite3, ctx);
+
+  VALUE utf8_string = rb_funcall(sql, rb_intern("encode"), 1,
+      rb_str_new2("UTF-8"));
+
   int status = sqlite3_prepare_v2(
       ctx,
-      StringValuePtr(sql), // TODO: convert this to UTF-8
-      RSTRING_LEN(sql),
+      StringValuePtr(utf8_string),
+      RSTRING_LEN(utf8_string),
       &stmt,
       NULL
   );
