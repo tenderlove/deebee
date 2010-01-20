@@ -7,6 +7,11 @@ static VALUE each(VALUE self)
   sqlite3_stmt *stmt;
 
   Data_Get_Struct(self, sqlite3_stmt, stmt);
+
+  VALUE connection = rb_iv_get(self, "@connection");
+  VALUE encoding   = rb_funcall(connection, rb_intern("encoding"), 0);
+  int idx  = rb_to_encoding_index(encoding);
+
   int value = sqlite3_step(stmt);
   while(value != SQLITE_DONE) {
     switch(value) {
@@ -25,7 +30,11 @@ static VALUE each(VALUE self)
                 rb_ary_push(list, rb_float_new(sqlite3_column_double(stmt, i)));
                 break;
               case SQLITE_TEXT:
-                rb_ary_push(list, rb_str_new2(sqlite3_column_text(stmt, i)));
+                {
+                  VALUE str = rb_str_new2(sqlite3_column_text(stmt, i));
+                  rb_enc_associate_index(str, idx);
+                  rb_ary_push(list, str);
+                }
                 break;
               case SQLITE_BLOB:
                 rb_ary_push(list, rb_str_new2(sqlite3_column_blob(stmt, i)));

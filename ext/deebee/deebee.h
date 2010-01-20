@@ -2,6 +2,7 @@
 #define DEEBEE
 
 #include <ruby.h>
+#include <ruby/encoding.h>
 #include <sqlite3.h>
 
 extern VALUE mSqlite3;
